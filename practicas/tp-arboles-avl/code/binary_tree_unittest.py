@@ -1,9 +1,6 @@
-# Unittest sobre BinaryTree
-# Algoritmos y estructuras de datos I
-
 import unittest
-
 from binary_tree import BinaryTree
+
 
 class TestBinaryTree(unittest.TestCase):
     def setUp(self):
@@ -122,21 +119,6 @@ class TestBinaryTree(unittest.TestCase):
         bt = BinaryTree()
         bt.insert('comienzo', 1)
         self.assertEqual(bt.access(bt.root.key), "comienzo")
-
-    def test_traverse_bfs(self):
-        """ Recorre un arbol en modo BFS
-        strings = [50, 20, 80, 10, 40, 70, 60]
-        keys = [50, 20, 80, 10, 40, 70, 60]
-        bt = BinaryTree()
-        for a in range(0, 7):
-            insert(bt, strings[a], keys[a])
-        L = traverseBreadFirst(bt)
-        l = []
-        for i in range(0, linkedlist.length(L)):
-            l.append(linkedlist.access(L, i))
-        #self.assertEqual(l, [50, 20, 80, 10, 40, 70, 60])
-        """
-
 
 
 if __name__ == '__main__':

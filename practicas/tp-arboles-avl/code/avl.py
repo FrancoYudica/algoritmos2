@@ -92,6 +92,7 @@ class AVLTree:
         # Found the unbalanced node, re balance the node and quits recursion
         if abs(current.bf) > 1:
             self._balance_node(current)
+            return
             #En este caso no retorno, pues necesito calcular los
             # balance factor de todos los nodos hacia arriba
 
@@ -313,8 +314,11 @@ class AVLTree:
         newRoot.leftnode = rotNode
         rotNode.parent = newRoot
 
-        self._update_node(newRoot)
+        # El orden en que se actualizan los nodos importa, pues rotnNode es el hijo
+        # de newRoot. Y para que newRoot tenga un bf correcto, la altura de rotNode
+        # debe estar actualizada
         self._update_node(rotNode)
+        self._update_node(newRoot)
 
     def _rotateRight(self, rotNode):
         """
@@ -371,16 +375,11 @@ class AVLTree:
         newRoot.rightnode = rotNode
         rotNode.parent = newRoot
 
-        self._update_node(newRoot)
+        # El orden en que se actualizan los nodos importa, pues rotnNode es el hijo
+        # de newRoot. Y para que newRoot tenga un bf correcto, la altura de rotNode
+        # debe estar actualizada
         self._update_node(rotNode)
-
-
-    def _height(self, node):
-
-        if node is None:
-            return 0
-
-        return 1 + max(self._height(node.leftnode), self._height(node.rightnode))
+        self._update_node(newRoot)
 
     def _balance_node(self, node):
         

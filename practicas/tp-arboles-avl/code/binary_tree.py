@@ -90,6 +90,17 @@ class BinaryTree:
         self._delete_recursive(node)
         return node.key
 
+    def height(self):
+        return self._height(self.root)
+
+    def _height(self, node):
+
+        if node is None:
+            return 0
+
+        return 1 + max(self._height(node.leftnode), self._height(node.rightnode))
+
+
     def _delete_recursive(self, node):
         
         # 1) Dos sub-árboles
