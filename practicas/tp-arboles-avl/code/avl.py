@@ -1,6 +1,5 @@
 
 
-
 class AVLNode:
     parent = None
     leftnode = None
@@ -112,18 +111,35 @@ class AVLTree:
 
     def balance(self):
 
+        """
+        Si el AVL tiene desbalances, por haberse copiado de un bst,
+        se utiliza balance. 
+        Luego de llamar al método balance, el árbol resulta ser un AVL balanceado
+        """
+
         def _balance_node_upwards(node):
+            """
+            Parte desde las hojas hasta llegar hasta la raíz, por eso es upwards
+            El objetivo es balancear los sub-árboles mas chicos hasta llegar a la raíz,
+            de esta manera el problema se simplifica y siempre sabemos que los sub-árboles
+            izquierdos y derechos se encuentran balanceados
+            """
             if node is None:
                 return
             
+            # Primero bajamos hasta llegar a las hojas
             _balance_node_upwards(node.rightnode)
             _balance_node_upwards(node.leftnode)
 
-            # Calculo balance factor
+            # Si este fuera el primer nodo, la altura sería 0 ya que la altura de los
+            # nodos está inicializada en 0. Es por eso que no hace falta hacer un caso
+            # especial para los nodos hoja
             self._update_node(node)
+
+            # Si se encuentra desbalanceado
             if abs(node.bf) > 1:
 
-                # Ejecuto la rotación
+                # Balanceamos el nodo
                 self._balance_node(node)
                 
                 # Continúo con el proceso hasta llegar hasta la raíz
@@ -241,6 +257,10 @@ class AVLTree:
         del AVL
         """
         def _copy_node_recursive(current_bt):
+            """
+            Funcion recursiva encargada de copiar las key y value
+            de los nodos del otro arbol binario en el AVL
+            """
             if current_bt is None:
                 return
 
