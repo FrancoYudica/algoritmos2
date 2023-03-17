@@ -33,7 +33,7 @@ class AVLTree:
         else:
             self._insert_bst(self.root, node)
 
-        self._update_bf(node)
+        self._update_upwards(node)
 
     def access(self, key):
         node = self._access_bst(self.root, key)
@@ -81,8 +81,15 @@ class AVLTree:
         node.height = 1 + max(left_height, right_height)
         node.bf = left_height - right_height
 
-    def _update_bf(self, current):
-
+    def _update_upwards(self, current):
+        """
+        Update upwards es un método que dado un nodo, escala hasta 
+        la raíz del árbol en caso de ser necesario. Y para cada uno
+        de los nodos en ese camino, verifica que se encuentren balanceados.
+        En caso de que se encuentre un nodo balanceado, se lo balancea y termina
+        de escalar.
+        Este método se utiliza en insert y en delete, para balancear el árbol
+        """
         if current is None:
             return
         
@@ -92,10 +99,8 @@ class AVLTree:
         if abs(current.bf) > 1:
             self._balance_node(current)
             return
-            #En este caso no retorno, pues necesito calcular los
-            # balance factor de todos los nodos hacia arriba
 
-        self._update_bf(current.parent)
+        self._update_upwards(current.parent)
 
     def _access_bst(self, current, key):
         if current is None:
@@ -108,6 +113,28 @@ class AVLTree:
             return self._access_bst(current.rightnode, key)
         
         return self._access_bst(current.leftnode, key)
+
+
+    def calculate_balance(self):
+
+        def _update_node_upwards(node):
+            if node is None:
+                return
+
+            # Si el nodo es hoja            
+            if node.leftnode is None and node.rightnode is None:
+                node.height = 0
+                node.bf = 0
+            else:
+                # Cuando el nodo no es hoja, tenemos que calcular
+                # las alturas de los nodos hijos para luego poder
+                # determinar la altura del nodo y su balance factor
+                _update_node_upwards(node.leftnode)
+                _update_node_upwards(node.rightnode)
+                self._update_node(node)
+
+        _update_node_upwards(self.root)
+
 
     def balance(self):
 
@@ -149,6 +176,7 @@ class AVLTree:
 
 
     def delete(self, key):
+
         node = self._access_bst(self.root, key)
         if node is None:
             return False
@@ -162,12 +190,12 @@ class AVLTree:
         # Actualiza balance factors y balancea 
         # en caso de ser necesario desde el sucesor
         if sucessor is not None:
-            self._update_bf(sucessor)
+            self._update_upwards(sucessor)
 
         # En caso de no tener sucesor, parte desde
         # el parent
         elif parent is not None:
-            self._update_bf(parent)
+            self._update_upwards(parent)
 
     
     def _delete_recursive_bst(self, node):
