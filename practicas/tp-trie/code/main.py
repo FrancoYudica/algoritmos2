@@ -73,8 +73,7 @@ def get_reversed_pairs(trie):
 
 
 def autocompelte(trie, prefix):
-    """ Given a Trie and a prefix, returns all the autocompleted words that start with the prefix"""
-
+    """ Given a Trie and a prefix, returns shared autocompleted postfix"""
     """ Utility functions"""
     def _find_last_node_recursive(current, prefix, word_index):
         # Returns the node that contains the last character of the word
@@ -110,13 +109,52 @@ def autocompelte(trie, prefix):
     if last_node is None:
         return
 
-    """2. Finds all the words that start with the prefix"""
     # Otherwise, traverses donwards
-    words = []
-    find_words(last_node, words, prefix)
+    """2. Finds all the words that start with the prefix"""
+    postfixes = []
+    find_words(last_node, postfixes, "")
 
-    return words
+    if len(postfixes) == 0:
+        return
+    
+    """3. Finds the shared postfix"""
+    postfix_index = 0
+    shared_posfix = ""
+    stop = False
 
+    while not stop:
+
+        # Gets the first word postfix
+        first_postfix = postfixes[0]
+
+        if len(first_postfix) <= postfix_index:
+            stop = True
+            break
+        
+        # Gets the current char
+        current_postfix_char = first_postfix[postfix_index]
+
+        # Compares the current char with the rest of the postfixes char
+        for i in range(1, len(postfixes)):
+
+            # If there is just one posfix that doesn't share
+            # the current char, breaks
+            postfix = postfixes[i]
+            if len(postfix) <= postfix_index:
+                stop = True
+                break
+
+            char = postfix[postfix_index]
+            if char != current_postfix_char:
+                stop = True
+                break
+        else:
+            # If it didn't break
+            shared_posfix += current_postfix_char
+            postfix_index += 1
+
+    # Concatenates to the postfixes the shared_postfix
+    return prefix + shared_posfix
 
 
 if __name__ == "__main__":
@@ -164,11 +202,11 @@ if __name__ == "__main__":
 
     def test_autocomplete():
         t1 = Trie()
-        words_t1 = ["Hola", "Buenas", "Tardes", "mucho", "gusto", "Horario", "Horarios", "Hacias"]
+        words_t1 = ["groenlandia", "groenlandes", "madera", "mama"]
 
         for w in words_t1:
             t1.insert(w)
 
-        print(autocompelte(t1, "H"))
+        print(autocompelte(t1, "ma"))
 
-    test_is_same_file()
+    test_autocomplete()
