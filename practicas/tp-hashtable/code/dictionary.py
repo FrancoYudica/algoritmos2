@@ -19,6 +19,39 @@ class Dictionary:
 
         # Initializes the table, in each slot an empty linked list is initialized
         self.table = [[] for _ in range(slots)]
+    
+    def __getitem__(self, key):
+        return self.search(key)
+    
+    def __setitem__(self, key, value):
+        sucess = self.update(key, value)
+        if not sucess:
+            raise IndexError(f"Dictionary doesn't contain the key: {key}, unable to update it's value")
+    
+    def __contains__(self, key):
+        return self.contains(key)
+
+    def contains(self, key):
+        hash_value = self.hash_function(key)
+        linked_list = self.table[hash_value]
+
+        for node in linked_list:
+            node_key = node[0]
+            if node_key == key:
+                return True
+        return False
+
+    def update(self, key, value):
+        hash_value = self.hash_function(key)
+        linked_list = self.table[hash_value]
+
+        for node in linked_list:
+            node_key = node[0]
+            if node_key == key:
+                node[1] = value
+                return True
+        return False
+
 
     def insert(self, key, value):
         """Insertion. Appends the tuple (key, value) to the corresponding list"""
@@ -41,6 +74,9 @@ class Dictionary:
 
     def delete(self, key):
         """Removes the element from the list"""
+        # This implementation of Dictiorary allows repeated
+        # keys, that's why only one of those is removed, 
+        # following FIFO
         hash_value = self.hash_function(key)
         linked_list = self.table[hash_value]
 
