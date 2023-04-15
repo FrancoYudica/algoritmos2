@@ -16,16 +16,22 @@ def ejercicio3():
     keys = [61,62,63,64,65]
     for key in keys:
         d.insert(key, -1)
+        print(f"Key={key} hash: {hash_func(key)}")
 
     d.display()
 
 
+
+"""
+Implemente un algoritmo lo más eficiente posible que devuelva True o False
+a la siguiente proposición: dado dos strings s1...sk  y p1...pk,
+se quiere encontrar si los caracteres de p1...pk corresponden a una permutación de
+s1...sk. Justificar el coste en tiempo de la solución propuesta.
+"""
+
 def ejercicio4_is_permutation(str1, str2):
+
     """
-    Implemente un algoritmo lo más eficiente posible que devuelva True o False
-    a la siguiente proposición: dado dos strings s1...sk  y p1...pk,
-    se quiere encontrar si los caracteres de p1...pk corresponden a una permutación de
-    s1...sk. Justificar el coste en tiempo de la solución propuesta.
     La complejidad de la implementación es de O(n) siendo n la cantidad de caracteres
     esto se debe a que iteramos 2 veces sobre todos los caracteres, realizando operaciones
     de insert, contains y delete, las cuales, gracias a trabajar con Dictionary son O(1),
@@ -61,12 +67,15 @@ def ejercicio4_is_permutation(str1, str2):
 
     return is_permutation
 
+
+"""
+Implemente un algoritmo que devuelva True si la lista que recibe de 
+entrada tiene todos sus elementos únicos, y Falso en caso contrario.
+Justificar el coste en tiempo de la solución propuesta.
+"""
 def ejercicio5_unique_elements(linked_list: list):
 
     """
-    Implemente un algoritmo que devuelva True si la lista que recibe de 
-    entrada tiene todos sus elementos únicos, y Falso en caso contrario.
-    Justificar el coste en tiempo de la solución propuesta.
     La complejidad del algoritmo es O(n). 
     Primero cargo la lista en Dictiorary, operación O(n)
     Luego itero por cada uno de los elementos de la lista O(n),
@@ -100,5 +109,164 @@ def ejercicio5_unique_elements(linked_list: list):
 
     return True
 
-if __name__ == "__main__":
-    print(ejercicio5_unique_elements([1, 2, 3, 3]))
+
+
+"""
+Los nuevos códigos postales argentinos tienen la forma cddddccc,
+donde c indica un carácter (A - Z) y d indica un dígito 0, . . . , 9.
+Por ejemplo, C1024CWN es el código postal que representa a la calle XXXX
+  a la altura 1024 en la Ciudad de Mendoza. 
+Encontrar e implementar una función de hash apropiada para
+los códigos postales argentinos
+"""
+def ejercicio6():
+    m = 1009    
+    code = "a1016idb"
+    
+    def hash_postal(code):
+        # Trato de que el código hash de lugares cercanos sea similar, es por 
+        # eso que considero:
+        # - El primer caracter como la ciudad
+        # - Los dddd como la altura
+        # - Los ccc como la calle
+        # Entonces debo evaluar primero los c y luego los d, de esta manera 
+        # garantizo que los códigos postales de lugares cercanos sean cercanos
+        # Entonces la cuidad y la calle deben tener mas peso que la altura
+
+        val = ord(code[0]) * 10_000     # Ciudad
+        val += ord(code[5]) * 1_000     # Calle
+        val += ord(code[6]) * 100       # Calle
+        val += ord(code[7]) * 10        # Calle
+        val += int(code[1:5])           # Altura
+
+        return val % m
+
+    print(hash_postal(code))
+
+
+"""
+Implemente un algoritmo para realizar la compresión básica de
+cadenas utilizando el recuento de caracteres repetidos.
+La complejidad del algoritmo es O(n), pues se itera una sola
+vez por la lista de n elementos
+"""
+def ejercicio7_compresion(patron):
+
+    compressed = ""
+
+    char = patron[0]
+    count = 0
+
+    for i in range(len(patron)):
+
+        # Si nos encontramos con el mismo char
+        if char == patron[i]:
+            # Se incrementa su contador
+            count += 1
+        
+        # Cuando nos encontramos con otro
+        else:
+            # Agregamos los resultados comprimidos
+            compressed += char + str(count)
+
+            # Iniciamos el contador con el otro char
+            char = patron[i]
+            count = 1
+
+    # Agregamos el final
+    compressed += char + str(count)
+
+    # Retorno el patron o el comprimido, selecciono el mas corto
+    return patron if len(compressed) >= len(patron) else compressed
+
+
+
+def ejercicio8(text, pattern):
+    """
+    Se requiere encontrar la primera ocurrencia de un string p1...pk
+    en uno más largo a1...aL. Implementar esta estrategia de la forma
+    más eficiente posible con un costo computacional menor a O(K*L)
+    (solución por fuerza bruta).  Justificar el coste en tiempo de la
+    solución propuesta.
+    """
+    # La complejidad de este algoritmo es de O(n), siendo
+    # n la cantidad de caracteres de 'text', pues solo itero
+    # una vez por la cadena 'text'
+    
+    matches = 0
+    start_index = -1
+    i = 0
+
+    while i < len(text):
+
+        # Cuando se obtiene una coincidencia 
+        if text[i] == pattern[matches]:
+
+            # Almacena el primer índice                
+            if matches == 0:
+                start_index = i
+
+            matches += 1
+            # Esto significa que el patron fue encontrado
+            if matches == len(pattern):
+                return start_index
+            
+            # Todavia no termina, siguie evaluando
+            i += 1
+        else:
+            
+            # Cuando el anterior caracter coincide, pero este no
+            if matches > 0:
+                matches = 0
+                start_index = -1
+                # No se incrementa el contador, para que el caracter
+                # actual entre en el bucle de comparación y no se saltee
+            
+            # Caso contrario, se incrementa normalmemte
+            else:
+                i += 1
+
+
+def ejercicio9(subset_list, set_list):
+
+    """
+    Considerar los conjuntos de enteros S = {s1, . . . , sn} y T = {t1, . . . , tm}.
+    Implemente un algoritmo que utilice una tabla de hash para determinar si S ⊆ T (S subconjunto de T).
+    ¿Cuál es la complejidad temporal del caso promedio del algoritmo propuesto?
+    """
+    # En la implementación asumo que no hay repetición de elementos, es una de las propiedades
+    # de los conjuntos. La complejidad del algoritmo que propongo es de O(n), siendo n la
+    # cantidad de elementos del conjunto
+    
+    # El 'subconjunto' no puede tener mas elementos
+    if len(subset_item) > len(set_list):
+        return False
+
+    # Creo la función de hash con el módulo
+    m = 109
+    hash_func = lambda x: x % m
+    set_dictionary = Dictionary(hash_func, m)
+
+    # Cargo el conjunto en el diccionario
+    for item in set_list:
+        set_dictionary.insert(item, -1)
+
+    # Itero por los elementos del 'subconjunto'
+    for subset_item in subset_list:
+        
+        # Si lo contiene
+        if set_dictionary.contains(subset_item):
+            # Lo elimino
+            set_dictionary.delete(subset_item)
+
+        # Si no lo contiene, entonces no es subconjunto
+        else:
+            return False
+        
+    return True
+
+
+
+if __name__ == "__main__":  
+    ejercicio4_is_permutation()
+    #print(ejercicio9([1, 2, 3], [1, 6, 3, 4]))
