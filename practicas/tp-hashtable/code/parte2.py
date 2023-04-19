@@ -180,15 +180,15 @@ def ejercicio7_compresion(patron):
     return patron if len(compressed) >= len(patron) else compressed
 
 
+"""
+Se requiere encontrar la primera ocurrencia de un string p1...pk
+en uno más largo a1...aL. Implementar esta estrategia de la forma
+más eficiente posible con un costo computacional menor a O(K*L)
+(solución por fuerza bruta).  Justificar el coste en tiempo de la
+solución propuesta.
+"""
+def ejercicio8_optimized(text, pattern):
 
-def ejercicio8(text, pattern):
-    """
-    Se requiere encontrar la primera ocurrencia de un string p1...pk
-    en uno más largo a1...aL. Implementar esta estrategia de la forma
-    más eficiente posible con un costo computacional menor a O(K*L)
-    (solución por fuerza bruta).  Justificar el coste en tiempo de la
-    solución propuesta.
-    """
     # La complejidad de este algoritmo es de O(n), siendo
     # n la cantidad de caracteres de 'text', pues solo itero
     # una vez por la cadena 'text'
@@ -227,13 +227,39 @@ def ejercicio8(text, pattern):
                 i += 1
 
 
+def ejercicio8_hashtable(text, pattern):
+    # La idea de este método, es ir agregando
+    # las sub-cadenas del texto de la misma longitud
+    # que las de pattern, de manera secuencial.
+
+    # Hash function toma los primeros tres caracteres del patron p
+    # (en caso de que tenga esa cantidad de caracteres, por eso uso min)
+    # nótese que también se multiplican por potencias de 10
+    m = 17
+    hash_function = lambda p: sum([ord(p[i]) * 10 ** i for i in range(min(3, len(p)))]) % m
+
+    dictionary = Dictionary(hash_function, m)
+    pattern_length = len(pattern)    
+
+    for i in range(0, len(text) - pattern_length + 1):
+
+        # Creo el patron de la misma longitud que pattern
+        sub_pattern = text[i : i + pattern_length]
+        
+        # Lo inserto en el diccionario con su respectivo índice
+        dictionary.insert(sub_pattern, i)
+        
+    # Se se encuentra, retorno el índice, de otra manera None
+    return dictionary[pattern] if pattern in dictionary else None
+
+"""
+Considerar los conjuntos de enteros S = {s1, . . . , sn} y T = {t1, . . . , tm}.
+Implemente un algoritmo que utilice una tabla de hash para determinar si S ⊆ T (S subconjunto de T).
+¿Cuál es la complejidad temporal del caso promedio del algoritmo propuesto?
+"""
 def ejercicio9(subset_list, set_list):
 
-    """
-    Considerar los conjuntos de enteros S = {s1, . . . , sn} y T = {t1, . . . , tm}.
-    Implemente un algoritmo que utilice una tabla de hash para determinar si S ⊆ T (S subconjunto de T).
-    ¿Cuál es la complejidad temporal del caso promedio del algoritmo propuesto?
-    """
+
     # En la implementación asumo que no hay repetición de elementos, es una de las propiedades
     # de los conjuntos. La complejidad del algoritmo que propongo es de O(n), siendo n la
     # cantidad de elementos del conjunto
@@ -268,5 +294,6 @@ def ejercicio9(subset_list, set_list):
 
 
 if __name__ == "__main__":  
-    ejercicio4_is_permutation()
+    print(ejercicio8_hashtable("abracadabra", "dabra"))
+    #ejercicio4_is_permutation()
     #print(ejercicio9([1, 2, 3], [1, 6, 3, 4]))
