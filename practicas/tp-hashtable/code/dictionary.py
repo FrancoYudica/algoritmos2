@@ -1,6 +1,7 @@
 
 
 class Dictionary:
+    
     def __init__(self, hash_function=None, slots=None):
 
         # Defines the hash function, if not provided

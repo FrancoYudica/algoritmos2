@@ -228,6 +228,7 @@ def ejercicio8_optimized(text, pattern):
 
 
 def ejercicio8_hashtable(text, pattern):
+    # Complejidad O(n)
     # La idea de este método, es ir agregando
     # las sub-cadenas del texto de la misma longitud
     # que las de pattern, de manera secuencial.
@@ -245,7 +246,7 @@ def ejercicio8_hashtable(text, pattern):
 
         # Creo el patron de la misma longitud que pattern
         sub_pattern = text[i : i + pattern_length]
-        
+
         # Lo inserto en el diccionario con su respectivo índice
         dictionary.insert(sub_pattern, i)
         
