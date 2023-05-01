@@ -49,66 +49,60 @@ def ejercicio4_is_permutation(str1, str2):
     # Creo un diccionario que contiene todos los caracteres de str1
     d = Dictionary(hash_function, m)
 
-    # Inserta todos los caracteres, sin importar las repeticiones, pues
-    # la implementación de la tabla permite repeticiones
+    # Inserta todos los caracteres, y como valor le pongo la cantidad de repeticiones
     for char in str1:
-        d.insert(char, 1)
 
-    is_permutation = True
+        if char in d:
+            d[char] += 1
+        else:
+            d.insert(char, 1)
+
     for char in str2:
         
         # Si se encuentra el caracter
         if char in d:
-            # Lo borro, por las repeticiones
-            d.delete(char)
+            
+            # Disminuyo la cantidad de repeticiones
+            d[char] -= 1
+            if d[char] == -1:
+                return False
         else:
-            is_permutation = False
-            break
-
-    return is_permutation
+            return False
+        
+    return True
 
 
 """
+Ejercicio 5
 Implemente un algoritmo que devuelva True si la lista que recibe de 
 entrada tiene todos sus elementos únicos, y Falso en caso contrario.
 Justificar el coste en tiempo de la solución propuesta.
 """
-def ejercicio5_unique_elements(linked_list: list):
+def unique_elements(linked_list : list):
 
     """
-    La complejidad del algoritmo es O(n). 
-    Primero cargo la lista en Dictiorary, operación O(n)
-    Luego itero por cada uno de los elementos de la lista O(n),
-    pero por cada key, itero por la estructura de datos del Diccionario O(c),
-    donde c es el factor de carga, el factor de carga es menor que n, luego
-    la complejidad resulta O(n)
+    La complejidad resulta O(n):
+        - Itero por todos los elementos O(n)
+        - Uso la función search O(c)
+        - Inserto O(1)
     """
-
-    # La idea es cargar la HashTable con todos los elementos de la lista,
-    # luego, acceder a cada uno de los elementos de la lista y verificar
-    # si la key es unica en cada una de las sub-listas
-
+    # Defino la función de hash
     m = len(linked_list)
-    a = (5**.5 - 1) * 0.5 
-    hash_func = lambda x: int(m * ((x * a) % 1))
+    a = (5**(0.5)-1.0) * 0.5
+    hash_func = lambda x: int(((a * x) % 1) * m)
     hash_table = Dictionary(hash_func, m)
 
-    for key in linked_list:
-        hash_table.insert(key, None)
+    # Itero por los elementos de la lista
+    for element in linked_list:
 
-    for key in linked_list:
-        sub_list = hash_table.table[key]
-        found = False
-        # Cuenta la cantidad de repeticiones de la key
-        for node in sub_list:
-            if node[0] == key:
-                # Si ya se encontraba en la lista entonces estaba repetida
-                if found > 1:
-                    return False
-                found = True
+        # Si el elemento ya ha sido insertado
+        if element in hash_table:
+            return False
+        
+        # Agrego el elemento por primera vez
+        hash_table.insert(element, 1)
 
     return True
-
 
 
 """
@@ -228,7 +222,7 @@ def ejercicio8_optimized(text, pattern):
 
 
 def ejercicio8_hashtable(text, pattern):
-    # Complejidad O(n)
+    # Complejidad O()
     # La idea de este método, es ir agregando
     # las sub-cadenas del texto de la misma longitud
     # que las de pattern, de manera secuencial.
@@ -295,6 +289,7 @@ def ejercicio9(subset_list, set_list):
 
 
 if __name__ == "__main__":  
-    print(ejercicio8_hashtable("abracadabra", "dabra"))
+    print(ejercicio4_is_permutation("abcdef", "badcef"))
+    #print(ejercicio8_hashtable("abracadabra", "dabra"))
     #ejercicio4_is_permutation()
     #print(ejercicio9([1, 2, 3], [1, 6, 3, 4]))

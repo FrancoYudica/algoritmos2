@@ -4,8 +4,7 @@ empty_value = 'deleted-none'
 
 
 def insert(table, hash_func, key, value):
-    m = len(table)
-
+    
     for i in range(len(table)):
         index = hash_func(key, i)
         if table[index] == empty_value:

@@ -57,7 +57,7 @@ class Dictionary:
     def insert(self, key, value):
         """Insertion. Appends the tuple (key, value) to the corresponding list"""
         hash_value = self.hash_function(key)
-        self.table[hash_value].append((key, value))
+        self.table[hash_value].append([key, value])
 
 
     def search(self, key):
