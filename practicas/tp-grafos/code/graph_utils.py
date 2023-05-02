@@ -258,47 +258,34 @@ def connections_count(graph):
 
 
 def best_road(graph, start, end):
+
     """
-    Returns a list of the edges that make the shortest path
-    Uses a BFS approach.
-    Stores all the posible paths inside a list, for each iteration,
-    a new path is added to paths, until we find the end
+    Instead of storing single node in the queue, stores a list of nodes
+    that represent the path.
+    For every dequeue a check of is end is done
     """
 
     start_node = graph[start]
     end_node = graph[end]
+    paths_queue = [[start_node]]
+    visited_nodes = {start_node}
 
-    if start_node == end_node:
-        return [start_node]
-
-    visited_keys = set()
-    visited_keys.add(start_node.key)
-
-    paths = [[start_node]]
-    path_index = 0
-
-    while path_index < len(paths):
-
-        path = paths[path_index]
+    while len(paths_queue):
+        path = paths_queue.pop(0)
         last_node = path[-1]
 
-        for adjacent_node in graph.get_adjacent(last_node):
-            
-            # Already visited
-            if adjacent_node.key in visited_keys:
-                continue
-            
-            # Path found
-            if adjacent_node == end_node:
-                return path + [adjacent_node]
-            
-            visited_keys.add(last_node.key)
-            paths.append(path + [adjacent_node])
+        # End reached
+        if last_node == end_node:
+            return path
 
-        path_index += 1
+        # Visits the "new" adjacent
+        for adjacent_node in graph.get_adjacent(last_node):
+
+            if adjacent_node not in visited_nodes:
+                visited_nodes.add(adjacent_node)
+                paths_queue.append(path + [adjacent_node])
 
     return []
-
 
 def is_bipartite(graph):
 
