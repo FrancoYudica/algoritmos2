@@ -29,41 +29,6 @@ def weight_remove(graph, node, ady_node):
 
 
 def prim(graph: dict):
-    
-    new_graph = {}
-    first_key = list(graph.keys())[0]
-    added = set(first_key)
-    total_weight = 0
-
-    while len(added) < len(graph):
-
-        minimum_weight = float("inf")
-        minimum_node = None
-        node = None
-
-        # Finds the new adyacent node with the least weight
-        for added_node in added:
-            for (adyacent_key, weight) in graph[added_node]:
-
-                if adyacent_key not in added:
-                    if weight < minimum_weight:
-                        minimum_node = adyacent_key
-                        minimum_weight = weight
-                        node = added_node
-
-        if minimum_node is not None:
-
-            # Addds the edge to the graph
-            weight_insert_double(new_graph, node, minimum_node, minimum_weight)
-            added.add(minimum_node)
-
-            total_weight += minimum_weight
-
-    print(total_weight)
-    return new_graph
-
-
-def prim_optimized(graph: dict):
 
     heap = Heap(len(graph))
     smaller_weights = {}
@@ -157,5 +122,5 @@ if __name__ == "__main__":
     weight_insert_double(graph, "d", "f", 14)
     weight_insert_double(graph, "f", "e", 10)
 
-    mst = prim_optimized(graph) # The total weight should be 37
+    mst = prim(graph) # The total weight should be 37
     print(mst)
