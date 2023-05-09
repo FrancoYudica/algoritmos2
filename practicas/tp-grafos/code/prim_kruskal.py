@@ -75,32 +75,58 @@ def prim(graph: dict):
 
 
 def kruskal(graph: dict):
+    
+    # UNCOMPLETED
+    # Edges is a directed graph
+    edges = {node : set() for node in graph.keys()}
 
-    edges = []
-    nodes = list(graph.keys())
-    edges_set = {}
-    for i, node in enumerate(nodes):
-        edges_set[node] = i
-        for adyacent_key, edge_weight in graph[node]:
-            edges.append((node, adyacent_key, edge_weight))
+    # Builds the directed graph
+    for node in graph.keys():
 
-    sorted_edges = sorted(edges, key=lambda e1: e1[2])
-    print(sorted_edges)
-    print(edges_set)
+        for ady, weight in graph[node]:
 
-    new_graph = {}
+            if (node, weight) in edges[ady]:
+                continue
 
-    while len(new_graph) < len(graph):
-        edge = sorted_edges.pop(0)
-        node0 = edge[0]
-        node1 = edge[1]
-        weight = edge[2]
+            edges[node].add((ady, weight))
 
-        if edges_set[node0] != edges_set[node1]:
-            # Merges the sets
-            edges_set[node1] = edges_set[node0]
-        
+    edges_count = sum([len(edges[node]) for node in edges.keys()])        
+    heap = Heap(edges_count)
 
+    # Inserts the edges in the heap
+    for node in edges.keys():
+        for ady, weight in edges[node]:
+            heap.add((node, ady), weight)
+
+
+    # At this stage, heap contains unique edges.
+    # contains (u, v) and not (u, v), (v, u)
+    parent = {}
+    while len(heap):
+        (u, v), weight = heap.pop()
+
+        if u not in parent:
+            parent[u] = (v, weight)
+
+        elif parent[u][1] > weight:
+            parent[u] = (v, weight)
+
+        elif v not in parent:
+            parent[v] = (u, weight)
+
+        elif parent[v][1] > weight:
+            parent[v] = (u, weight)
+
+    result_graph = {}
+    total_weight = 0
+    for node in parent.keys():
+        ady, weight = parent[node]
+        weight_insert_double(result_graph, node, ady, weight)
+
+        total_weight += weight
+
+    print(f"Weight: {total_weight}")
+    return result_graph
 
 if __name__ == "__main__":
 
@@ -122,5 +148,5 @@ if __name__ == "__main__":
     weight_insert_double(graph, "d", "f", 14)
     weight_insert_double(graph, "f", "e", 10)
 
-    mst = prim(graph) # The total weight should be 37
+    mst = kruskal(graph) # The total weight should be 37
     print(mst)
