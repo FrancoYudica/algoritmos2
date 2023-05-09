@@ -2,7 +2,9 @@ class Heap:
     """
     Min heap, but stores a (key, value) pair
     This (key, value) structure is used in Prim and Kruskal 
-    algorithms to store the node and the weight
+    algorithms to store the node and the weight.
+    Update and access use the key parameter. Performance is archieved
+    by using an internal dictionary that holds the {key : index} pairs
     """
     def __init__(self, size: int):
         self._array = [None for _ in range(size)]
@@ -28,6 +30,7 @@ class Heap:
         return key in self._key_positions
 
     def add(self, key, value):
+        # Operation O(log(n))
         if self._size == self._insert_index:
             raise OverflowError(f"Overflow, array of size {self._size}")
 
@@ -38,6 +41,7 @@ class Heap:
         self._heapify_up()
 
     def peek(self):
+        # O(1)
         # Returns the min element
         if self._size == 0:
             raise Exception("Empty heap")
@@ -45,6 +49,7 @@ class Heap:
         return self._array[0]
 
     def pop(self):
+        # O(log(n))
         # Removes the min element from the heap and returns
         pair = self._array[0]
         self._insert_index -= 1
@@ -56,9 +61,11 @@ class Heap:
         return pair
     
     def access(self, key):
+        # O(1)
         return self._array[self._key_positions[key]][1]
     
     def update_key(self, key, value):
+        # O(log(n))
         """
         Used to modify the value of the key.
         Heapifies up or down, if the value is smaller
