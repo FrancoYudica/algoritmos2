@@ -63,7 +63,7 @@ def can_increase_connected_count(graph):
 
 
 def find_articulation_nodes(graph):
-
+    # O(V + A) complexity
     def _dfs_visit(graph, node, visited, parent, ap, time, low_adyacent, current_time):
 
         visited[node] = True

@@ -21,10 +21,10 @@ class Node:
         self.parent = None
 
 
-def relax(node_u, node_v, weights):
+def relax(node_u, node_v, weight):
 
-    if node_v.d > node_u.d + weights[(node_u.key, node_v.key)]:
-        node_v.d = node_u.d + weights[(node_u.key, node_v.key)]
+    if node_v.d > node_u.d + weight:
+        node_v.d = node_u.d + weight
         node_v.parent = node_u
         return True
     
@@ -33,24 +33,15 @@ def relax(node_u, node_v, weights):
 
 def dijkstra(graph, start_key, end_key):
 
-    weights = {}        # Stores the weight of each (u, v) edge
-    nodes = {}          # Stores the Node instances
+    edges_count = sum(len(graph[node_key]) for node_key in graph.keys())
 
-    edges_count = 0
+    # Stores the Node instances
+    nodes = {}          
 
-    # Creates the node instances, and fills the weights dict
-    for node_key in graph.keys():
-        
-        # The node could be added here
-        nodes[node_key] = Node(node_key)
-
-        for ady, weight in graph[node_key]:
-            edges_count += 1
-            weights[(node_key, ady)] = weight
-
-    # Creates the heap and initializes d attrubute as +infinite
+    # Heap used to get the min distance item
     heap = Heap(edges_count)
     for node_key in graph.keys():
+        nodes[node_key] = Node(node_key)
         heap.add(node_key, float("inf"))
 
     visited_keys = set()
@@ -63,6 +54,11 @@ def dijkstra(graph, start_key, end_key):
     while len(heap):
 
         (node_key, d) = heap.pop()
+
+        # Shortest path already found
+        if node_key == end_key:
+            break
+
         visited_keys.add(node_key)
 
         # Gets the node, containing d, and parent data
@@ -75,7 +71,7 @@ def dijkstra(graph, start_key, end_key):
                 ady_node = nodes[ady]
 
                 # Relax the adyacent
-                modified = relax(node, ady_node, weights)
+                modified = relax(node, ady_node, weight)
 
                 # Only if the relax call modified the value
                 if modified:
