@@ -1,5 +1,5 @@
 import unittest
-from backtracking import give_change, maximize_bag_weight, greatest_sub_sequence, sum_subset
+from backtracking import give_change, maximize_bag_weight, longest_sub_sequence, sum_subset
 
 class BacktrackingTest(unittest.TestCase):
 
@@ -11,8 +11,8 @@ class BacktrackingTest(unittest.TestCase):
         self.assertEqual(maximize_bag_weight(22, [30, 17, 7, 8, 9, 6]), [9, 7, 6])
         self.assertEqual(maximize_bag_weight(22, [30, 17, 8, 9, 6]), [17])
 
-    def test_greatest_sub_sequence(self):
-        self.assertEqual(greatest_sub_sequence([5, 1, 3, 6, 100, 17, 21]), [1, 3, 6, 17, 21])
+    def test_longest_sub_sequence(self):
+        self.assertEqual(longest_sub_sequence([5, 1, 3, 6, 100, 17, 21]), [1, 3, 6, 17, 21])
 
     def test_sum_subset(self):
         self.assertEqual(sum_subset(14, [10, 4]), True)

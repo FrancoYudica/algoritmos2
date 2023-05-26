@@ -73,10 +73,10 @@ def maximize_bag_weight(max_weight, cans_weight: list):
     return _bag_recursive(max_weight, sorted(cans_weight))
 
 
-def greatest_sub_sequence(numbers: list):
+def longest_sub_sequence(numbers: list):
     # Done with brute force - seems like it should be done with dynamic programming
 
-    def _greatest_recursive(current_index, numbers):
+    def _longest_recursive(current_index, numbers):
 
         max_count = -1
         max_branch = []
@@ -86,7 +86,7 @@ def greatest_sub_sequence(numbers: list):
                 continue
 
             # Greater or equal passes
-            branch = _greatest_recursive(i, numbers)
+            branch = _longest_recursive(i, numbers)
             if len(branch) > max_count:
                 max_count = len(branch)
                 max_branch = [numbers[i]] + branch
@@ -97,7 +97,7 @@ def greatest_sub_sequence(numbers: list):
     longest = []
     for i in range(len(numbers)):
         
-        sub_seq = [numbers[i]] + _greatest_recursive(i, numbers)
+        sub_seq = [numbers[i]] + _longest_recursive(i, numbers)
         if len(sub_seq) > len(longest):
             longest = sub_seq
 
