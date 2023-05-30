@@ -15,6 +15,7 @@ class Can:
 # cans: list of Can
 # max_weight: float
 # returns: list of cans that maximize the bag
+# The algorithm complexity is determined by the sorting, therefore O(n log(n))
 def maximize_bag(cans, max_weight):
 
     # Sorts the can by benefit
