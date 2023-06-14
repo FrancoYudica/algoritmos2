@@ -11,7 +11,8 @@ def find_sorted_k(numbers, k):
     # Takes the first number of the list and splits the list in 2
     # always checking if there is a chance that the number is in that
     # list.
-    # The time complexity is O(log(n))
+    # The recursive law takes the following time T(n) = T(n/2) + n 
+    # The time complexity is O(n)
 
     def _find_r(start_index, numbers, k):
         
@@ -26,7 +27,7 @@ def find_sorted_k(numbers, k):
             return False
 
         # Creates 2 lists containing the numbers smaller or equal and greater
-        # to the randomly selected index
+        # to the randomly selected index. O(n)
         compare_index = randrange(0, len(numbers))
 
         smaller_equal = []
