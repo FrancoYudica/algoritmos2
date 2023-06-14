@@ -70,7 +70,7 @@ def dijkstra(graph, start_key, end_key):
 
                 ady_node = nodes[ady]
 
-                # Relax the adyacent
+                # Relax the adjacent
                 modified = relax(node, ady_node, weight)
 
                 # Only if the relax call modified the value
