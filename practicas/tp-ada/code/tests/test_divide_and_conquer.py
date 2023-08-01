@@ -1,6 +1,8 @@
 import unittest
 from divide_and_conquer.binary_search import binary_search
 from divide_and_conquer.find_sorted_k import find_sorted_k
+from divide_and_conquer.k_sum_subset import exists_k_sum
+
 
 class DivideAndConquerTests(unittest.TestCase):
 
@@ -72,6 +74,53 @@ class DivideAndConquerTests(unittest.TestCase):
             find_sorted_k(
                 [4, 6, 1, 7, 8, 9, 3, 10],
                 30
+            ),
+            False
+        )
+    def test_exists_k_sum(self):
+        self.assertEqual(
+            exists_k_sum(
+                6,
+                [1, 2, 4]
+            ),
+            True
+        )
+
+        self.assertEqual(
+            exists_k_sum(
+                6,
+                [1, 2]
+            ),
+            False
+        )
+
+        self.assertEqual(
+            exists_k_sum(
+                6,
+                [6]
+            ),
+            True
+        )
+
+        self.assertEqual(
+            exists_k_sum(
+                6,
+                [6]
+            ),
+            True
+        )
+
+        self.assertEqual(
+            exists_k_sum(
+                12,
+                [1, 4, 6, 5]
+            ),
+            True
+        )
+        self.assertEqual(
+            exists_k_sum(
+                12,
+                [1, 4, 6, 0]
             ),
             False
         )
