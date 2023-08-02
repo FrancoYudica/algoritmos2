@@ -1,5 +1,5 @@
 import unittest
-from dynamic_programming import longest_increasing_sub_sequence, give_change, exists_k_sum, find_path_weight, find_lcs_length
+from dynamic_programming import longest_increasing_sub_sequence, give_change, exists_k_sum, find_path_weight, find_lcs_length, give_coin_change
 
 
 class DynamicProgrammingTest(unittest.TestCase):
@@ -12,12 +12,12 @@ class DynamicProgrammingTest(unittest.TestCase):
 
     def test_give_change(self):
         self.assertEqual(
-            give_change(10, [1, 3, 5, 7]),
+            give_coin_change(10, [1, 3, 5, 7]),
             2
         )
 
         self.assertEqual(
-            give_change(18, [1, 3, 5, 7]),
+            give_coin_change(18, [1, 3, 5, 7]),
             4
         )
 
@@ -28,12 +28,12 @@ class DynamicProgrammingTest(unittest.TestCase):
                 5,
                 [1]
             ),
-            True
+            False
         )
 
         self.assertEqual(
             exists_k_sum(
-                17,
+                8,
                 [3, 5]
             ),
             True

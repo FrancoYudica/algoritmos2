@@ -22,8 +22,7 @@ def longest_increasing_sub_sequence(numbers):
     return sequences_length
 
 
-
-def give_change(change: int, coins: list) -> int:
+def give_change_top_down(change: int, coins: list) -> int:
     # O(n^2)
 
     def _minimize(change, coins, minimized):
@@ -50,6 +49,48 @@ def give_change(change: int, coins: list) -> int:
 
     return _minimize(change, coins, minimized)
 
+def give_coin_change(n: int, coins: int):
+    """
+    Bottom up implementation
+    Time complexity O(n * |coins|)
+    coins = {1, 2, 3, 4}
+    n = 7
+
+    Then the table
+      0 1 2 3 4 5 6 7
+    N 0 0 0 0 0 0 0 0 
+    1 0 1 2 3 4 5 6 7
+    2 0 1 1 2 2 3 3 4
+    3 0 1 1 1 2 2 2 3
+    4 0 1 1 1 1 2 2 2
+
+    And the result is placed at the end of the table
+    """
+
+    T = [[0 for _ in range(len(coins) + 1)] for _ in range(n + 1)]
+
+    for i, number in enumerate(coins):
+        row = i + 1
+        number = coins[i]
+
+        for amount in range(1, n + 1):
+
+            complement = amount - number
+
+            # Negative result, copies the above value
+            if complement < 0:
+                T[amount][row] = T[amount][row - 1]
+
+            # The number matches the amount
+            elif complement == 0:
+                T[amount][row] = 1
+
+            # When complement is positive
+            else:
+                T[amount][row] = 1 + T[complement][row - 1]
+
+    # Result always at matrix bottom right position
+    return T[-1][-1]
 
 """
 Given a set of numbers <i1, i2, ..., ik>
@@ -59,27 +100,47 @@ added makes N.
 In this case, we allow repeating numbers
 """
 def exists_k_sum(n: int, numbers: int):
-    # Time complexity O(numbers * n)
-    def _exists(n, numbers, cached):
-        # n: is the desired result
-        # numbers: set of numbers
-        if cached[n] != None:
-            return cached[n]
+    """
+    Time complexity O(n * |coins|)
+    
+    numbers = {3, 4, 5, 2}
+    n = 6
 
-        for number in numbers:
-            
-            if number > n:
-                continue
+    Then the table
+      0 1 2 3 4 5 6
+    N 1 0 0 0 0 0 0
+    3 1 0 0 1 0 0 0
+    4 1 0 0 1 1 0 0
+    5 1 0 0 1 1 1 0
+    2 1 0 1 1 1 1 1
 
-            if _exists(n - number, numbers, cached):
-                cached[n] = True
-                return True
-        
-        cached[n] = False
-        return False
-    cached = [None] * (n + 1)
-    cached[0] = True
-    return _exists(n, numbers, cached)
+    And the result is placed at the end of the table
+    """
+
+    T = [[0 for _ in range(len(numbers) + 1)] for _ in range(n + 1)]
+
+    for i, number in enumerate(numbers):
+        row = i + 1
+        number = numbers[i]
+
+        for amount in range(1, n + 1):
+
+            complement = amount - number
+
+            # Negative result, copies the above value
+            if complement < 0:
+                T[amount][row] = T[amount][row - 1]
+
+            # The number matches the amount
+            elif complement == 0:
+                T[amount][row] = True
+
+            # When complement is positive
+            else:
+                T[amount][row] = T[complement][row - 1]
+
+    # Result always at matrix bottom right position
+    return T[-1][-1]
 
 
 """
